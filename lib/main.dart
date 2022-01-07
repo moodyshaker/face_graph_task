@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'Screens/home.dart';
 import 'Utilits/const.dart';
 
@@ -25,6 +23,7 @@ class MyApp extends StatelessWidget {
       initialRoute: Home.id,
       title: 'FaceGraphTask',
       routes: routes,
+      onGenerateRoute: getOnGenerateRoute,
     );
   }
 }

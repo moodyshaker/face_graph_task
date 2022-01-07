@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class DatabaseModel {
+class NoteModel {
   int id;
   String title;
   String picture;
@@ -8,7 +8,7 @@ class DatabaseModel {
   String description;
   int status;
 
-  DatabaseModel({
+  NoteModel({
     this.id,
     @required this.title,
     @required this.picture,
@@ -17,7 +17,7 @@ class DatabaseModel {
     @required this.status,
   });
 
-  DatabaseModel.withId({
+  NoteModel.withId({
     @required this.id,
     @required this.title,
     @required this.picture,
@@ -37,8 +37,8 @@ class DatabaseModel {
     };
   }
 
-  factory DatabaseModel.fromMap(Map<String, dynamic> map) {
-    return DatabaseModel.withId(
+  factory NoteModel.fromMap(Map<String, dynamic> map) {
+    return NoteModel.withId(
       id: map['_id'],
       title: map['title'],
       picture: map['picture'],

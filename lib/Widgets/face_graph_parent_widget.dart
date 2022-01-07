@@ -10,7 +10,7 @@ class FaceGraphParentWidget extends StatelessWidget {
 
   const FaceGraphParentWidget({
     @required this.bodyWidget,
-    @required this.onAddIconCallback,
+    this.onAddIconCallback,
     Key key,
     this.appbarTitle,
   }) : super(key: key);
@@ -21,6 +21,7 @@ class FaceGraphParentWidget extends StatelessWidget {
         ? CupertinoPageScaffold(
             navigationBar: appbarTitle != null
                 ? CupertinoNavigationBar(
+                    leading: null,
                     trailing: GestureDetector(
                       onTap: onAddIconCallback,
                       child: const Icon(
@@ -43,6 +44,7 @@ class FaceGraphParentWidget extends StatelessWidget {
                 : null,
             appBar: appbarTitle != null
                 ? AppBar(
+                    leading: null,
                     title: Text(
                       appbarTitle,
                     ),
