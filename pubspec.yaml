@@ -1,7 +1,7 @@
 name: face_graph_task
 description: A new Flutter project.
 
-publish_to: 'none' 
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -13,6 +13,14 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
+  intl:
+  sqflite:
+  path:
+  path_provider:
+  provider:
+  fluttertoast:
+  flutter_icons:
+  firebase_storage:
 
 dev_dependencies:
   flutter_test:

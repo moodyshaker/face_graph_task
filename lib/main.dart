@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'Screens/home.dart';
@@ -12,7 +15,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return Platform.isIOS ? CupertinoApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: Home.id,
+      title: 'FaceGraphTask',
+      routes: routes,
+    ) : MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: Home.id,
       title: 'FaceGraphTask',
