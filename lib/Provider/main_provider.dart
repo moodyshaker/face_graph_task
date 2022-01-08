@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 
 class MainProvider extends ChangeNotifier {
   Storage _database;
-  List<NoteModel> _notes;
+  List<NoteModel> _notes = [];
   bool _notesEmpty;
 
   Future<void> initFirebase() async {
@@ -47,6 +47,7 @@ class MainProvider extends ChangeNotifier {
   }
 
   Future<void> getAllNotes() async {
+    _notes = [];
     _notes = await _database.getAllNotes();
     _notesEmpty = _notes.isEmpty;
     notifyListeners();

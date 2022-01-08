@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     _mainProvider = Provider.of<MainProvider>(context, listen: false);
     init();
     Future.delayed(const Duration(milliseconds: 1500),
-        () => Navigator.pushNamed(context, Home.id));
+        () => Navigator.pushReplacementNamed(context, Home.id));
   }
 
   void init() async {

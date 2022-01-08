@@ -64,7 +64,7 @@ class Storage {
 
   Future<void> updateStatus(int i, int noteId) async {
     await _db
-        .rawUpdate('UPDATE $tableName SET $status $i WHERE $id == $noteId');
+        .rawUpdate('UPDATE $tableName SET $status = $i WHERE $id == $noteId');
   }
 
   Future<void> deleteAll() async {
@@ -83,8 +83,8 @@ class Storage {
 
   Future<List<NoteModel>> getAllNotes() async {
     Database database = await db;
-    List<Map<String, dynamic>> data = await database.query(
-      tableName,
+    List<Map<String, dynamic>> data = await database.rawQuery(
+      'SELECT * FROM $tableName ORDER BY $status ASC'
     );
     List<NoteModel> models = [];
     models = data.map((e) => NoteModel.fromMap(e)).toList();

@@ -6,14 +6,17 @@ import 'package:face_graph_task/Dilaogs/image_picker_dialog.dart';
 import 'package:face_graph_task/Dilaogs/loading.dart';
 import 'package:face_graph_task/Provider/main_provider.dart';
 import 'package:face_graph_task/Utilits/const.dart';
+import 'package:face_graph_task/Widgets/face_graph_cupertino_button.dart';
+import 'package:face_graph_task/Widgets/face_graph_material_button.dart';
 import 'package:face_graph_task/Widgets/face_graph_parent_widget.dart';
-import 'package:face_graph_task/Widgets/image_container.dart';
-import 'package:face_graph_task/Widgets/input_field.dart';
+import 'package:face_graph_task/Widgets/face_graph_image_container.dart';
+import 'package:face_graph_task/Widgets/face_graph_input_field.dart';
 import 'package:face_graph_task/model/add_new_note_arg.dart';
 import 'package:face_graph_task/model/note_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -102,14 +105,14 @@ class _AddNewNoteState extends State<AddNewNote> {
         },
         child: FaceGraphParentWidget(
           onAddIconCallback: null,
-          appbarTitle: widget.arg.isUpdate ? 'Add New Note' : 'Edit Note',
+          appbarTitle: widget.arg.isUpdate ? 'Edit Note' : 'Add New Note',
           bodyWidget: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
               key: _formState,
               child: Column(
                 children: [
-                  ImageContainer(
+                  FaceGraphImageContainer(
                     onImagePressed: () {
                       _isLoading = true;
                       _isLoading
@@ -154,7 +157,7 @@ class _AddNewNoteState extends State<AddNewNote> {
                   SizedBox(
                     height: size.height * 0.02,
                   ),
-                  InputField(
+                  FaceGraphInputField(
                     readOnly: false,
                     isRadiusBorder: true,
                     controller: _titleController,
@@ -171,7 +174,7 @@ class _AddNewNoteState extends State<AddNewNote> {
                   SizedBox(
                     height: size.height * 0.02,
                   ),
-                  InputField(
+                  FaceGraphInputField(
                     readOnly: false,
                     isRadiusBorder: true,
                     controller: _descriptionController,
@@ -189,14 +192,14 @@ class _AddNewNoteState extends State<AddNewNote> {
                     height: size.height * 0.02,
                   ),
                   Platform.isIOS
-                      ? CupertinoButton(
-                          onPressed: () async {
+                      ? FaceGraphCupertinoButton(
+                          onPressCallback: () async {
                             if (_formState.currentState.validate()) {
                               _formState.currentState.save();
                               showDialog(
                                   context: context,
                                   barrierDismissible: false,
-                                  builder: (ctx) => Loading());
+                                  builder: (ctx) => const Loading());
                               if (widget.arg.isUpdate) {
                                 await mainProvider.updateNote(NoteModel(
                                     id: widget.arg.note.id,
@@ -205,6 +208,7 @@ class _AddNewNoteState extends State<AddNewNote> {
                                     date: DateTime.now(),
                                     description: _description,
                                     status: Status.open));
+                                Fluttertoast.showToast(msg: 'Note Edited');
                               } else {
                                 await mainProvider.addNewNote(NoteModel(
                                     title: _title,
@@ -212,27 +216,23 @@ class _AddNewNoteState extends State<AddNewNote> {
                                     date: DateTime.now(),
                                     description: _description,
                                     status: Status.open));
+                                Fluttertoast.showToast(msg: 'Note Added');
                               }
                               Navigator.pop(context);
                               Navigator.pop(context);
                             }
                           },
                           color: Theme.of(context).primaryColor,
-                          child: Text(
-                            widget.arg.isUpdate ? 'Edit' : 'Save',
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
+                          label: widget.arg.isUpdate ? 'Edit' : 'Save',
                         )
-                      : ElevatedButton(
-                          onPressed: () async {
+                      : FaceGraphMaterialButton(
+                          onPressCallback: () async {
                             if (_formState.currentState.validate()) {
                               _formState.currentState.save();
                               showDialog(
                                   context: context,
                                   barrierDismissible: false,
-                                  builder: (ctx) => Loading());
+                                  builder: (ctx) => const Loading());
                               if (widget.arg.isUpdate) {
                                 await mainProvider.updateNote(NoteModel(
                                     id: widget.arg.note.id,
@@ -241,6 +241,7 @@ class _AddNewNoteState extends State<AddNewNote> {
                                     date: DateTime.now(),
                                     description: _description,
                                     status: Status.open));
+                                Fluttertoast.showToast(msg: 'Note Edited');
                               } else {
                                 await mainProvider.addNewNote(NoteModel(
                                     title: _title,
@@ -248,17 +249,15 @@ class _AddNewNoteState extends State<AddNewNote> {
                                     date: DateTime.now(),
                                     description: _description,
                                     status: Status.open));
+                                Fluttertoast.showToast(msg: 'Note Added');
                               }
                               Navigator.pop(context);
                               Navigator.pop(context);
                             }
                           },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Theme.of(context).primaryColor),
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white)),
-                          child: Text(widget.arg.isUpdate ? 'Edit' : 'Save'),
+                          color: Theme.of(context).primaryColor,
+                          textColor: Colors.white,
+                          label: widget.arg.isUpdate ? 'Edit' : 'Save',
                         ),
                 ],
               ),

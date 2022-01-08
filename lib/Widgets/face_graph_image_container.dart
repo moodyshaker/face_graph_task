@@ -1,12 +1,13 @@
 import 'dart:io';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 
-class ImageContainer extends StatelessWidget {
+class FaceGraphImageContainer extends StatelessWidget {
   final String imagePath;
   final Function onImagePressed;
   final bool isLoading;
 
-  const ImageContainer({
+  const FaceGraphImageContainer({
     Key key,
     @required this.imagePath,
     @required this.onImagePressed,
@@ -46,9 +47,9 @@ class ImageContainer extends StatelessWidget {
                         borderRadius: BorderRadius.circular(
                           25.0,
                         ),
-                        child: Image.network(
-                          imagePath,
-                          fit: BoxFit.cover,
+                        child: FancyShimmerImage(
+                          imageUrl: imagePath,
+                          boxFit: BoxFit.cover,
                         ),
                       ),
               ),

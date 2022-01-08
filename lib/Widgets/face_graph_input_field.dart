@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-class InputField extends StatefulWidget {
+class FaceGraphInputField extends StatefulWidget {
   final Function onTap;
   final Function onChange;
   final TextEditingController controller;
@@ -17,7 +17,7 @@ class InputField extends StatefulWidget {
   final Key key;
   final bool isRadiusBorder;
 
-  InputField({
+  FaceGraphInputField({
     this.onTap,
     this.onChange,
     this.validator,
@@ -35,10 +35,10 @@ class InputField extends StatefulWidget {
   });
 
   @override
-  State<InputField> createState() => _InputFieldState();
+  State<FaceGraphInputField> createState() => _FaceGraphInputFieldState();
 }
 
-class _InputFieldState extends State<InputField> {
+class _FaceGraphInputFieldState extends State<FaceGraphInputField> {
   bool isObscure = true;
 
   @override
