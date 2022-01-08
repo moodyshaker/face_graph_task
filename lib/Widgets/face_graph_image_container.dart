@@ -17,6 +17,7 @@ class FaceGraphImageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final mq = MediaQuery.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -31,8 +32,8 @@ class FaceGraphImageContainer extends StatelessWidget {
                     25.0,
                   ),
                 ),
-                height: size.width * 0.4,
-                width: size.width * 0.4,
+                height:mq.orientation == Orientation.portrait && size.width < 400 ? size.width * 0.4 : size.width * 0.2,
+                width: mq.orientation == Orientation.portrait && size.width < 400 ? size.width * 0.4 : size.width * 0.2,
                 child: imagePath == null || imagePath.isEmpty
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(

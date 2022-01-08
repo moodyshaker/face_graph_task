@@ -110,25 +110,181 @@ class _AddNewNoteState extends State<AddNewNote> {
             padding: const EdgeInsets.all(20.0),
             child: Form(
               key: _formState,
-              child: Column(
-                children: [
-                  FaceGraphImageContainer(
-                    onImagePressed: () {
-                      _isLoading = true;
-                      _isLoading
-                          ? showModalBottomSheet(
-                              context: context,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(
-                                    20.0,
-                                  ),
-                                  topLeft: Radius.circular(
-                                    20.0,
+              child: SingleChildScrollView(
+                child: mq.orientation == Orientation.portrait && size.width < 400 ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    FaceGraphImageContainer(
+                      onImagePressed: () {
+                        _isLoading = true;
+                        _isLoading
+                            ? showModalBottomSheet(
+                                context: context,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(
+                                      20.0,
+                                    ),
+                                    topLeft: Radius.circular(
+                                      20.0,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              builder: (_) => ImagePickerDialog(
+                                builder: (_) => ImagePickerDialog(
+                                      onImageReceived: (XFile imageFile) async {
+                                        if (imageFile != null) {
+                                          showDialog(
+                                              barrierDismissible: false,
+                                              context: context,
+                                              builder: (ctx) => const Loading());
+                                          TaskSnapshot task = await uploadImage(
+                                              uid: DateTime.now()
+                                                  .millisecondsSinceEpoch
+                                                  .toString(),
+                                              path: imageFile.path);
+                                          String imageUrl =
+                                              await task.ref.getDownloadURL();
+                                          setState(() => _pictureUrl = imageUrl);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          _isLoading = false;
+                                        }
+                                      },
+                                    ))
+                            : Container();
+                      },
+                      isLoading: _isLoading,
+                      imagePath: _pictureUrl,
+                    ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    FaceGraphInputField(
+                      readOnly: false,
+                      isRadiusBorder: true,
+                      controller: _titleController,
+                      validator: (String output) {
+                        if (output.length < 5) {
+                          return 'please enter note title';
+                        }
+                      },
+                      onSaved: (String value) {
+                        _title = value;
+                      },
+                      labelText: 'title',
+                    ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    FaceGraphInputField(
+                      readOnly: false,
+                      isRadiusBorder: true,
+                      controller: _descriptionController,
+                      validator: (String output) {
+                        if (output.length < 5) {
+                          return 'please enter note description';
+                        }
+                      },
+                      onSaved: (String value) {
+                        _description = value;
+                      },
+                      labelText: 'description',
+                    ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    Platform.isIOS
+                        ? FaceGraphCupertinoButton(
+                            onPressCallback: () async {
+                              if (_formState.currentState.validate()) {
+                                _formState.currentState.save();
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (ctx) => const Loading());
+                                if (widget.arg.isUpdate) {
+                                  await mainProvider.updateNote(NoteModel(
+                                      id: widget.arg.note.id,
+                                      title: _title,
+                                      picture: _pictureUrl,
+                                      date: DateTime.now(),
+                                      description: _description,
+                                      status: Status.open));
+                                  Fluttertoast.showToast(msg: 'Note Edited');
+                                } else {
+                                  await mainProvider.addNewNote(NoteModel(
+                                      title: _title,
+                                      picture: _pictureUrl,
+                                      date: DateTime.now(),
+                                      description: _description,
+                                      status: Status.open));
+                                  Fluttertoast.showToast(msg: 'Note Added');
+                                }
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              }
+                            },
+                            color: Theme.of(context).primaryColor,
+                            label: widget.arg.isUpdate ? 'Edit' : 'Save',
+                          )
+                        : FaceGraphMaterialButton(
+                            onPressCallback: () async {
+                              if (_formState.currentState.validate()) {
+                                _formState.currentState.save();
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (ctx) => const Loading());
+                                if (widget.arg.isUpdate) {
+                                  await mainProvider.updateNote(NoteModel(
+                                      id: widget.arg.note.id,
+                                      title: _title,
+                                      picture: _pictureUrl,
+                                      date: DateTime.now(),
+                                      description: _description,
+                                      status: Status.open));
+                                  Fluttertoast.showToast(msg: 'Note Edited');
+                                } else {
+                                  await mainProvider.addNewNote(NoteModel(
+                                      title: _title,
+                                      picture: _pictureUrl,
+                                      date: DateTime.now(),
+                                      description: _description,
+                                      status: Status.open));
+                                  Fluttertoast.showToast(msg: 'Note Added');
+                                }
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              }
+                            },
+                            color: Theme.of(context).primaryColor,
+                            textColor: Colors.white,
+                            label: widget.arg.isUpdate ? 'Edit' : 'Save',
+                          ),
+                  ],
+                ) : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: FaceGraphImageContainer(
+                            onImagePressed: () {
+                              _isLoading = true;
+                              _isLoading
+                                  ? showModalBottomSheet(
+                                  context: context,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(
+                                        20.0,
+                                      ),
+                                      topLeft: Radius.circular(
+                                        20.0,
+                                      ),
+                                    ),
+                                  ),
+                                  builder: (_) => ImagePickerDialog(
                                     onImageReceived: (XFile imageFile) async {
                                       if (imageFile != null) {
                                         showDialog(
@@ -141,7 +297,7 @@ class _AddNewNoteState extends State<AddNewNote> {
                                                 .toString(),
                                             path: imageFile.path);
                                         String imageUrl =
-                                            await task.ref.getDownloadURL();
+                                        await task.ref.getDownloadURL();
                                         setState(() => _pictureUrl = imageUrl);
                                         Navigator.pop(context);
                                         Navigator.pop(context);
@@ -149,117 +305,129 @@ class _AddNewNoteState extends State<AddNewNote> {
                                       }
                                     },
                                   ))
-                          : Container();
-                    },
-                    isLoading: _isLoading,
-                    imagePath: _pictureUrl,
-                  ),
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
-                  FaceGraphInputField(
-                    readOnly: false,
-                    isRadiusBorder: true,
-                    controller: _titleController,
-                    validator: (String output) {
-                      if (output.length < 5) {
-                        return 'please enter note title';
-                      }
-                    },
-                    onSaved: (String value) {
-                      _title = value;
-                    },
-                    labelText: 'title',
-                  ),
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
-                  FaceGraphInputField(
-                    readOnly: false,
-                    isRadiusBorder: true,
-                    controller: _descriptionController,
-                    validator: (String output) {
-                      if (output.length < 5) {
-                        return 'please enter note description';
-                      }
-                    },
-                    onSaved: (String value) {
-                      _description = value;
-                    },
-                    labelText: 'description',
-                  ),
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
-                  Platform.isIOS
-                      ? FaceGraphCupertinoButton(
-                          onPressCallback: () async {
-                            if (_formState.currentState.validate()) {
-                              _formState.currentState.save();
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (ctx) => const Loading());
-                              if (widget.arg.isUpdate) {
-                                await mainProvider.updateNote(NoteModel(
-                                    id: widget.arg.note.id,
-                                    title: _title,
-                                    picture: _pictureUrl,
-                                    date: DateTime.now(),
-                                    description: _description,
-                                    status: Status.open));
-                                Fluttertoast.showToast(msg: 'Note Edited');
-                              } else {
-                                await mainProvider.addNewNote(NoteModel(
-                                    title: _title,
-                                    picture: _pictureUrl,
-                                    date: DateTime.now(),
-                                    description: _description,
-                                    status: Status.open));
-                                Fluttertoast.showToast(msg: 'Note Added');
-                              }
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            }
-                          },
-                          color: Theme.of(context).primaryColor,
-                          label: widget.arg.isUpdate ? 'Edit' : 'Save',
-                        )
-                      : FaceGraphMaterialButton(
-                          onPressCallback: () async {
-                            if (_formState.currentState.validate()) {
-                              _formState.currentState.save();
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (ctx) => const Loading());
-                              if (widget.arg.isUpdate) {
-                                await mainProvider.updateNote(NoteModel(
-                                    id: widget.arg.note.id,
-                                    title: _title,
-                                    picture: _pictureUrl,
-                                    date: DateTime.now(),
-                                    description: _description,
-                                    status: Status.open));
-                                Fluttertoast.showToast(msg: 'Note Edited');
-                              } else {
-                                await mainProvider.addNewNote(NoteModel(
-                                    title: _title,
-                                    picture: _pictureUrl,
-                                    date: DateTime.now(),
-                                    description: _description,
-                                    status: Status.open));
-                                Fluttertoast.showToast(msg: 'Note Added');
-                              }
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            }
-                          },
-                          color: Theme.of(context).primaryColor,
-                          textColor: Colors.white,
-                          label: widget.arg.isUpdate ? 'Edit' : 'Save',
+                                  : Container();
+                            },
+                            isLoading: _isLoading,
+                            imagePath: _pictureUrl,
+                          ),
                         ),
-                ],
+                        SizedBox(
+                          width: size.width * 0.02,
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            children: [
+                              FaceGraphInputField(
+                                readOnly: false,
+                                isRadiusBorder: true,
+                                controller: _titleController,
+                                validator: (String output) {
+                                  if (output.length < 5) {
+                                    return 'please enter note title';
+                                  }
+                                },
+                                onSaved: (String value) {
+                                  _title = value;
+                                },
+                                labelText: 'title',
+                              ),
+                              SizedBox(
+                                height: size.height * 0.02,
+                              ),
+                              FaceGraphInputField(
+                                readOnly: false,
+                                isRadiusBorder: true,
+                                controller: _descriptionController,
+                                validator: (String output) {
+                                  if (output.length < 5) {
+                                    return 'please enter note description';
+                                  }
+                                },
+                                onSaved: (String value) {
+                                  _description = value;
+                                },
+                                labelText: 'description',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    Platform.isIOS
+                        ? FaceGraphCupertinoButton(
+                      textColor: Colors.white,
+                      onPressCallback: () async {
+                        if (_formState.currentState.validate()) {
+                          _formState.currentState.save();
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (ctx) => const Loading());
+                          if (widget.arg.isUpdate) {
+                            await mainProvider.updateNote(NoteModel(
+                                id: widget.arg.note.id,
+                                title: _title,
+                                picture: _pictureUrl,
+                                date: DateTime.now(),
+                                description: _description,
+                                status: Status.open));
+                            Fluttertoast.showToast(msg: 'Note Edited');
+                          } else {
+                            await mainProvider.addNewNote(NoteModel(
+                                title: _title,
+                                picture: _pictureUrl,
+                                date: DateTime.now(),
+                                description: _description,
+                                status: Status.open));
+                            Fluttertoast.showToast(msg: 'Note Added');
+                          }
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        }
+                      },
+                      color: Theme.of(context).primaryColor,
+                      label: widget.arg.isUpdate ? 'Edit' : 'Save',
+                    )
+                        : FaceGraphMaterialButton(
+                      onPressCallback: () async {
+                        if (_formState.currentState.validate()) {
+                          _formState.currentState.save();
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (ctx) => const Loading());
+                          if (widget.arg.isUpdate) {
+                            await mainProvider.updateNote(NoteModel(
+                                id: widget.arg.note.id,
+                                title: _title,
+                                picture: _pictureUrl,
+                                date: DateTime.now(),
+                                description: _description,
+                                status: Status.open));
+                            Fluttertoast.showToast(msg: 'Note Edited');
+                          } else {
+                            await mainProvider.addNewNote(NoteModel(
+                                title: _title,
+                                picture: _pictureUrl,
+                                date: DateTime.now(),
+                                description: _description,
+                                status: Status.open));
+                            Fluttertoast.showToast(msg: 'Note Added');
+                          }
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        }
+                      },
+                      color: Theme.of(context).primaryColor,
+                      textColor: Colors.white,
+                      label: widget.arg.isUpdate ? 'Edit' : 'Save',
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
