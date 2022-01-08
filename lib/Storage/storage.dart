@@ -18,14 +18,13 @@ class Storage {
 
   Storage._instance();
 
-  Future<Database> get db async =>
-      _db ??= await _initDatabase();
+  Future<Database> get db async => _db ??= await _initDatabase();
 
   Future<Database> _initDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = join(directory.path, tableName);
     Database db =
-    await openDatabase(path, onCreate: _createDB, version: version);
+        await openDatabase(path, onCreate: _createDB, version: version);
     return db;
   }
 
@@ -63,6 +62,11 @@ class Storage {
     );
   }
 
+  Future<void> updateStatus(int i, int noteId) async {
+    await _db
+        .rawUpdate('UPDATE $tableName SET $status $i WHERE $id == $noteId');
+  }
+
   Future<void> deleteAll() async {
     Database database = await db;
     database.rawDelete('DELETE FROM $tableName');
@@ -83,7 +87,7 @@ class Storage {
       tableName,
     );
     List<NoteModel> models = [];
-    models = data.map((e)=> NoteModel.fromMap(e));
+    models = data.map((e) => NoteModel.fromMap(e)).toList();
     return models;
   }
 

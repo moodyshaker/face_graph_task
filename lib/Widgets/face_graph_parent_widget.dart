@@ -23,7 +23,8 @@ class FaceGraphParentWidget extends StatelessWidget {
                 ? CupertinoNavigationBar(
                     leading: null,
                     trailing: GestureDetector(
-                      onTap: onAddIconCallback,
+                      onTap:
+                          onAddIconCallback,
                       child: const Icon(
                         Icons.add,
                       ),
@@ -35,12 +36,14 @@ class FaceGraphParentWidget extends StatelessWidget {
           )
         : Scaffold(
             floatingActionButton: Platform.isAndroid
-                ? FloatingActionButton(
-                    child: const Icon(
-                      Icons.add,
-                    ),
-                    onPressed: onAddIconCallback,
-                  )
+                ? onAddIconCallback != null
+                    ? FloatingActionButton(
+                        child: const Icon(
+                          Icons.add,
+                        ),
+                        onPressed: onAddIconCallback,
+                      )
+                    : null
                 : null,
             appBar: appbarTitle != null
                 ? AppBar(

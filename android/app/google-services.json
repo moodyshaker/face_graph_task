@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1045101636577",
+    "project_id": "facegraphtask",
+    "storage_bucket": "facegraphtask.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045101636577:android:cb3ed5f4a8b554d6fd80a0",
+        "android_client_info": {
+          "package_name": "com.example.face_graph_task"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1045101636577-ilvj36jup6tncgjgpilel7f7lg95mvgm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFgaNjAH0_YkPrjepesAapl4AGWWnHu1I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1045101636577-ilvj36jup6tncgjgpilel7f7lg95mvgm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

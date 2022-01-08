@@ -4,6 +4,7 @@ import 'package:face_graph_task/Dilaogs/action_dialog.dart';
 import 'package:face_graph_task/Dilaogs/cupertino_action_dialog.dart';
 import 'package:face_graph_task/Dilaogs/image_picker_dialog.dart';
 import 'package:face_graph_task/Dilaogs/loading.dart';
+import 'package:face_graph_task/Provider/main_provider.dart';
 import 'package:face_graph_task/Utilits/const.dart';
 import 'package:face_graph_task/Widgets/face_graph_parent_widget.dart';
 import 'package:face_graph_task/Widgets/image_container.dart';
@@ -14,6 +15,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddNewNote extends StatefulWidget {
   static const String id = 'Add_New_Note';
@@ -39,6 +41,11 @@ class _AddNewNoteState extends State<AddNewNote> {
     super.initState();
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
+    if (widget.arg.isUpdate) {
+      _titleController.text = widget.arg.note.title;
+      _descriptionController.text = widget.arg.note.description;
+      _pictureUrl = widget.arg.note.picture;
+    }
   }
 
   @override
@@ -52,9 +59,11 @@ class _AddNewNoteState extends State<AddNewNote> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final mq = MediaQuery.of(context);
+    final mainProvider = Provider.of<MainProvider>(context);
     return WillPopScope(
         onWillPop: () async {
           showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (context) => Platform.isIOS
                 ? CupertinoActionDialog(
@@ -92,6 +101,7 @@ class _AddNewNoteState extends State<AddNewNote> {
           return false;
         },
         child: FaceGraphParentWidget(
+          onAddIconCallback: null,
           appbarTitle: widget.arg.isUpdate ? 'Add New Note' : 'Edit Note',
           bodyWidget: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -119,8 +129,9 @@ class _AddNewNoteState extends State<AddNewNote> {
                                     onImageReceived: (XFile imageFile) async {
                                       if (imageFile != null) {
                                         showDialog(
+                                            barrierDismissible: false,
                                             context: context,
-                                            builder: (ctx) => Loading());
+                                            builder: (ctx) => const Loading());
                                         TaskSnapshot task = await uploadImage(
                                             uid: DateTime.now()
                                                 .millisecondsSinceEpoch
@@ -174,6 +185,81 @@ class _AddNewNoteState extends State<AddNewNote> {
                     },
                     labelText: 'description',
                   ),
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Platform.isIOS
+                      ? CupertinoButton(
+                          onPressed: () async {
+                            if (_formState.currentState.validate()) {
+                              _formState.currentState.save();
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (ctx) => Loading());
+                              if (widget.arg.isUpdate) {
+                                await mainProvider.updateNote(NoteModel(
+                                    id: widget.arg.note.id,
+                                    title: _title,
+                                    picture: _pictureUrl,
+                                    date: DateTime.now(),
+                                    description: _description,
+                                    status: Status.open));
+                              } else {
+                                await mainProvider.addNewNote(NoteModel(
+                                    title: _title,
+                                    picture: _pictureUrl,
+                                    date: DateTime.now(),
+                                    description: _description,
+                                    status: Status.open));
+                              }
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            }
+                          },
+                          color: Theme.of(context).primaryColor,
+                          child: Text(
+                            widget.arg.isUpdate ? 'Edit' : 'Save',
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : ElevatedButton(
+                          onPressed: () async {
+                            if (_formState.currentState.validate()) {
+                              _formState.currentState.save();
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (ctx) => Loading());
+                              if (widget.arg.isUpdate) {
+                                await mainProvider.updateNote(NoteModel(
+                                    id: widget.arg.note.id,
+                                    title: _title,
+                                    picture: _pictureUrl,
+                                    date: DateTime.now(),
+                                    description: _description,
+                                    status: Status.open));
+                              } else {
+                                await mainProvider.addNewNote(NoteModel(
+                                    title: _title,
+                                    picture: _pictureUrl,
+                                    date: DateTime.now(),
+                                    description: _description,
+                                    status: Status.open));
+                              }
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            }
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Theme.of(context).primaryColor),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white)),
+                          child: Text(widget.arg.isUpdate ? 'Edit' : 'Save'),
+                        ),
                 ],
               ),
             ),

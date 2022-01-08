@@ -6,7 +6,10 @@ class NoteModel {
   String picture;
   DateTime date;
   String description;
-  int status;
+
+  // 0 is opened
+  // 1 is closed
+  Status status;
 
   NoteModel({
     this.id,
@@ -33,7 +36,7 @@ class NoteModel {
       'picture': picture,
       'date': date.toIso8601String(),
       'description': description,
-      'status': status,
+      'status': status.index,
     };
   }
 
@@ -44,7 +47,9 @@ class NoteModel {
       picture: map['picture'],
       date: DateTime.parse(map['date']),
       description: map['description'],
-      status: map['status'],
+      status: map['status'] == 0 ? Status.open : Status.close,
     );
   }
 }
+
+enum Status { open, close }

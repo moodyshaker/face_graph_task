@@ -22,6 +22,8 @@ dependencies:
   flutter_icons:
   image_picker:
   firebase_storage:
+  firebase_core:
+  fancy_shimmer_image:
 
 dev_dependencies:
   flutter_test:
