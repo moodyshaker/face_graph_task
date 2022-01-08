@@ -90,7 +90,7 @@ class _HomeState extends State<Home> {
               : GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 1.023,
+                    childAspectRatio: 1.12,
                     crossAxisSpacing: 8.0,
                     mainAxisSpacing: 8.0,
                   ),

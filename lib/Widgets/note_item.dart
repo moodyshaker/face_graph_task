@@ -27,49 +27,53 @@ class NoteItem extends StatelessWidget {
     final mq = MediaQuery.of(context);
     final size = MediaQuery.of(context).size;
     final mainProvider = Provider.of<MainProvider>(context);
+    print(size.width);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       margin: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(12.0),
-                    topRight: Radius.circular(12.0)),
-                child: FancyShimmerImage(
-                  imageUrl: note.picture,
-                  height: mq.orientation == Orientation.portrait
-                      ? size.height * 0.25
-                      : size.width * 0.25,
-                  width: mq.orientation == Orientation.portrait
-                      ? size.width
-                      : size.height,
-                  boxFit: BoxFit.cover,
-                ),
-              ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(12.0),
-                    ),
-                    color: note.status == Status.open
-                        ? Colors.green
-                        : Colors.orange),
-                child: Text(
-                  note.status.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
+          Expanded(
+            child: Stack(
+              alignment: Alignment.topRight,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12.0),
+                      topRight: Radius.circular(12.0)),
+                  child: FancyShimmerImage(
+                    imageUrl: note.picture,
+                    width: size.width,
+                    // height: mq.orientation == Orientation.portrait
+                    //     ? size.height * 0.25
+                    //     : size.width * 0.25,
+                    // width: mq.orientation == Orientation.portrait
+                    //     ? size.width
+                    //     : size.height,
+                    boxFit: BoxFit.cover,
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(12.0),
+                      ),
+                      color: note.status == Status.open
+                          ? Colors.green
+                          : Colors.orange),
+                  child: Text(
+                    note.status.name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
