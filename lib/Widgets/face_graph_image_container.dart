@@ -32,8 +32,14 @@ class FaceGraphImageContainer extends StatelessWidget {
                     25.0,
                   ),
                 ),
-                height:mq.orientation == Orientation.portrait && size.width < 400 ? size.width * 0.4 : size.width * 0.2,
-                width: mq.orientation == Orientation.portrait && size.width < 400 ? size.width * 0.4 : size.width * 0.2,
+                height:
+                    mq.orientation == Orientation.portrait && size.width < 400
+                        ? size.width * 0.4
+                        : size.width * 0.2,
+                width:
+                    mq.orientation == Orientation.portrait && size.width < 400
+                        ? size.width * 0.4
+                        : size.width * 0.2,
                 child: imagePath == null || imagePath.isEmpty
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(
@@ -61,8 +67,14 @@ class FaceGraphImageContainer extends StatelessWidget {
                         color: Colors.black.withOpacity(
                           0.6,
                         ),
-                        height: size.width * 0.4,
-                        width: size.width * 0.4,
+                        height: mq.orientation == Orientation.portrait &&
+                                size.width < 400
+                            ? size.width * 0.4
+                            : size.width * 0.2,
+                        width: mq.orientation == Orientation.portrait &&
+                                size.width < 400
+                            ? size.width * 0.4
+                            : size.width * 0.2,
                         child: Center(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(

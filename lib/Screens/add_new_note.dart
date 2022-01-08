@@ -287,6 +287,7 @@ class _AddNewNoteState extends State<AddNewNote> {
                                   builder: (_) => ImagePickerDialog(
                                     onImageReceived: (XFile imageFile) async {
                                       if (imageFile != null) {
+                                        Navigator.pop(context);
                                         showDialog(
                                             barrierDismissible: false,
                                             context: context,
@@ -299,7 +300,6 @@ class _AddNewNoteState extends State<AddNewNote> {
                                         String imageUrl =
                                         await task.ref.getDownloadURL();
                                         setState(() => _pictureUrl = imageUrl);
-                                        Navigator.pop(context);
                                         Navigator.pop(context);
                                         _isLoading = false;
                                       }
